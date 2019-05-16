@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta id="viewport" name="viewport" content="width=500" />
+    <!--RSS FEEDS-->
+        <link rel="alternate" href="https://eriveltongualter.github.io/Test/feeds/all.rss.xml" type="application/rss+xml" title="Erivelton's GSoC 2019 Full RSS Feed"/>
+
+    <title>Post 101 - Entry Test for MBDyn // Erivelton's GSoC 2019</title>
+    <link rel="stylesheet" href="./theme/css/normalize.css" type="text/css" />
+    <link rel="stylesheet" href="./theme/css/base.css" type="text/css" />
+    <link rel="stylesheet" href="./theme/css/code.css" type="text/css" />
+<link rel="stylesheet" href="./theme/css/article.css" type="text/css" />
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: { equationNumbers: { autoNumber: "all" } }
+        });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+    <!--Top image-->
+    <div class="container">
+        <div class="topimage">
+            <img src="theme/images/gsocMBDyn.png">
+        </div>
+    </div>
+
+    <!--Links and site title-->
+    <div class="topbar">
+        <span><a href="./">Erivelton's GSoC 2019</a></span>
+        <ul>
+                <li><a href="./pages/about.html">About</a></li>
+                <li><a href="./blog.html">Blog</a></li>
+        </ul>
+    </div>
+    <!--Content, footer, and scripts-->
+    <div class="container">
+    <div class="page-title">
+        <h1>Post 101 - Entry Test for MBDyn</h1>
+        <p style="text-align:justify">March 21, 2019 &mdash; under
+            <a class="post-category" href="./tag/gsoc.html">GSoC</a>,
+            <a class="post-category" href="./tag/mbdyn.html">MBDyn</a>
+        </p>
+    </div>
+    <p>Hello all, this post is part of the entry test to participate in the Google Summer of Code 2019 under the MBDyn organization. It is an open source software for analysis of Multidbody Dynamics developed at the <em>Dipartimento di Ingegneria Aerospaziale</em> of the <em>University &quot;Politecnico di Milano&quot;</em> in Italy.</p>
+<div class="section" id="step-1-first-contact">
+<h2>Step 1: First contact</h2>
+<p>The first step aims to evaluate if we were successfully able to download, compile, create a test and finally run it. Therefore, I started by downloading the current MBDyn version from
+<a class="reference external" href="https://www.mbdyn.org/?Software_Download">Software Download page</a>.</p>
+<p>In order to install MBDyn, I executed the following commands:</p>
+<div class="highlight"><pre><span></span>mkdir mbdyn-1.7.3
+tar -zvxf mbdyn-1.7.3.tar.gz -C mbdyn-1.7.3
+./configure
+make
+make check
+make install
+</pre></div>
+<p>The installation was successful; however, since the MBDyn had been installed at  <em>/usr/local/mbdyn/bin</em>, I needed to add this diretory path to the system by editing the <em>.bashrc</em> .file. The following line of code was added:</p>
+<div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:/usr/local/mbdyn/bin/
+</pre></div>
+<p><strong>Example Test:</strong></p>
+<p>In order to test if the tool was working correctly, a <em>Hello World</em> script was evaluated. I extracted it from <a class="reference external" href="https://www.sky-engin.jp/en/">Sky Engineering Laboratory Inc</a>. There are several examples about how to simulate mechanical systems, as well as tutorials and simulations. I chose the <a class="reference external" href="http://www.sky-engin.jp/en/MBDynTutorial/chap14/chap14.html">Double Rigid Pendulum</a> which can also be found <a class="reference external" href="http://www.sky-engin.jp/en/MBDynExamples/ex03/ex03.html.">here</a> as well.</p>
+<p>Then, run the following command:</p>
+<div class="highlight"><pre><span></span>mbdyn -f double_rigid_pendulum.mbd
+</pre></div>
+<p>The simulation was executed with success and I noted it created 5 other files with the same name; however, with different extensions. The data is stored in the files <em>.ine</em> and <em>.mov</em>, which correspond to the kinematic and dynamic output data.</p>
+<p>The first way of plotting the movement of the rigid body is by using gnuplot:</p>
+<div class="highlight"><pre><span></span>gnuplot
+plot <span class="s2">&quot;double_rigid_pendulum .mov&quot;</span> using <span class="o">(</span><span class="m">1</span>.e-3*<span class="nv">$0</span><span class="o">)</span>:<span class="o">(</span><span class="nv">$4</span><span class="o">)</span>
+</pre></div>
+<p>The following picture illustrates the results using gnuplot:</p>
+<div class="figure align-center">
+<img alt="alternate text" src="images/double_rigid_pendulum_gnuplot.png" style="width: 600px;" />
+</div>
+<p>Another approach to display the output is using Matlab. Probably, there is some code on MBDyn website which already extracts the normalized data into matlab. I created a <a class="reference external" href="https://github.com/EriveltonGualter/GSoC-MBDyn/tree/master/matlab%20code%20to%20generate%20animations">script</a> which can store the output data into variables. Also, for this example, I created the following simulation:</p>
+<div class="figure align-center">
+<img alt="" src="images/doublependulum_sim.gif" style="height: 500px;" />
+</div>
+<div class="figure align-center">
+<img alt="" src="images/triplependulum_sim.gif" style="height: 500px;" />
+</div>
+</div>
+<div class="section" id="step-2-developing-a-branch-of-mbdyn-main-repository">
+<h2>Step 2: Developing a branch of MBDyn main repository</h2>
+<p>So far, I was able to install the latest version of MBDyn, which is version 1.7 and play around with mbdyn codes. In order to see the result of a simulation, I used gnuplot in the command line and Matlab as I already showed.</p>
+<p>For step 2, it is asked to implement a modification to the MBDyn code used for step 1 and then re-run step 1. In order to do it, I donwloaded and compiled the most recent source code at <a class="reference external" href="https://public.gitlab.polimi.it/DAER/mbdyn/tree/master">GitLab</a>.</p>
+<p>The MBDyn does not provide a graphical interface and I could not find any command to plot the outputs. I just noticed it generates the output as already mentioned. Therefore, one of the future modifications is to add a functionlity to plot the results directly from the mbdyn tool. In order to evaluate the use of ploting tools on source code, I used gnuplot inside of MBDyn. The goal here is to plot one of the output files <em>sInputFileName</em>.out. This file is depicted in the following figure:</p>
+<div class="figure align-center">
+<img alt="" src="images/fileout.png" style="width: 800px;" />
+</div>
+<p>The modification proposed consist of the plot <strong>ResErr</strong> versus <strong>Simulation Time</strong>. The same concept could be use to plot kinematic and dynamic results. The modified files to perform this task were:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/EriveltonGualter/GSoC-MBDyn/commit/3582a845d3133deedb3e62f9dda9e9b404be7a1c#diff-cb0347a506f52a82f475c5562c82ab5c">solver.cc</a></li>
+<li><a class="reference external" href="https://github.com/EriveltonGualter/GSoC-MBDyn/commit/3582a845d3133deedb3e62f9dda9e9b404be7a1c#diff-e715f74378a0080cde34c26c4f75ccf9">solver.h</a></li>
+</ul>
+<p>Somehow, I was not able to fork the repository to be able to pull my modifications. I believe I need permission to fork this repository. To mitigate it, I created a repositoy at my github account and uploaded all the modified code and other codes I used in this post. To download the repository execute the following from the command line:</p>
+<div class="highlight"><pre><span></span>git clone git@github.com:EriveltonGualter/GSoC-MBDyn.git
+</pre></div>
+<p>or download directly here: <a class="reference external" href="https://github.com/EriveltonGualter/GSoC-MBDyn">https://github.com/EriveltonGualter/GSoC-MBDyn</a></p>
+<p>Therefore, after re-running the code, a plot will be created in the same directory of the output files. The following figures were generated by this new source code for the previous mbdyn code, where the left corresponds to the results for double pendulum and the right plot for triple pendulum.</p>
+<div class="figure align-center">
+<img alt="" src="images/image_out.png" style="width: 800px;" />
+</div>
+<p>Also, I added some debugig message. You can check in the following:</p>
+<div class="figure align-center">
+<img alt="" src="images/output_screen.png" style="width: 800px;" />
+</div>
+</div>
+<div class="section" id="step-3-creating-my-onw-module">
+<h2>Step 3: Creating my onw module</h2>
+<p>Now, it is time to create my own module. In order to do it, I first started by compiling the proposed modules to check if they worked well. These modules are: driver caller, constitutive law and element. I followed the <a class="reference external" href="https://public.gitlab.polimi.it/DAER/mbdyn/wikis/home#what-are-run-time-loadable-modules-and-how-do-they-work">wiki page</a> and <a class="reference external" href="https://www.mbdyn.org/?Documentation___Official_Documentation___FAQ#HOW_CAN_I_BUILD_RUN_TIME_LOADABLE_MODULES">FAQ page</a> to undesrtand better what they are and how to use them in the mbdyn code.</p>
+<p>As can be seen in the following picture, the module was successfully built.</p>
+<div class="figure align-center">
+<img alt="" src="images/libmodule.png" style="width: 800px;" />
+</div>
+<p>Next step was to create a MBdyn code to run the module instances as proposed in the entry test. However, I took some time prior to understand how those modules works and how I could implement them. So, I found other interesting module called <strong>fab-electric</strong> developed by Eduardo Okabe. I built it and ran some fundamental eletric circuit exercises:</p>
+<ul class="simple">
+<li>a power supply connected to a Resistor;</li>
+<li>a power supply connected to a Resistor-Capacitor circuit (RC circuit);</li>
+</ul>
+<p>You can see the results in the following pictures. The first one shows the current and voltage in the resistor. The second one shows the voltage in the resistor and capacitor.</p>
+<div class="figure align-center">
+<img alt="" src="images/Resistor_AV.png" style="width: 800px;" />
+</div>
+<div class="figure align-center">
+<img alt="" src="images/RCcircuit.png" style="width: 800px;" />
+</div>
+<p>So far, this is what I have to present. I will continue developing my onw module soon and keep it updated here and in the GitLab page. In the mean time, I will also explore the project ideias.</p>
+<p>Stay tuned !</p>
+</div>
+
+
+
+
+
+<div class="container bottom">
+    <hr>
+    <p>
+        Theme created by <a href="https://github.com/jcrist">Jim Crist</a>.
+        Licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons</a>.
+    </p>
+    <p>
+    Find me on <a href="https://twitter.com/EGualter">Twitter</a>, <a 
+        href="https://github.com/EriveltonGualter">GitHub</a>, old personal <a href="https://eriveltongualter.github.io/">webpage</a>, or shoot me an <a
+    href="mailto:erivelton.gualter@gmail.com">email</a>.
+    </p>
+</div>    </div>
+</body>
+</html>
